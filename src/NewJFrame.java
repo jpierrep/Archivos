@@ -48,12 +48,20 @@ public class NewJFrame extends javax.swing.JFrame {
    private String mesForm="01";
    private String areaForm="Todas";
    private String fechaForm= Integer.toString(añoForm)+mesForm+"01";
+   private getData getdata=new getData();
+   private  List<MovContable> listaMov=  getdata.getResumenCuentasMes(fechaForm,empresaForm,areaForm);
             
     
     
     public NewJFrame() throws IOException, FileNotFoundException, ClassNotFoundException {
         initComponents();
-        llenarTabla(0, 2017,"01","Todas");
+        postInitComponents();
+        
+        llenarTabla(listaMov,0, 2017,"01","Todas");
+           int[] totales=this.getTotalesMov(listaMov);
+            jLabel8.setText(Integer.toString(totales[0]));
+             jLabel9.setText(Integer.toString(totales[1]));
+        
         jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Enero", "Febrero", "Marzo", "Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"  }));
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "2017","2016","2015"  }));
         jComboBox3.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "GuardService Seguridad S.A.","GS Tecnologías S.A.","GS Outsourcing S.A.","Inversiones Odin Ltda."  }));
@@ -70,7 +78,7 @@ public class NewJFrame extends javax.swing.JFrame {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() throws IOException, ClassNotFoundException {
+    private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -85,6 +93,9 @@ public class NewJFrame extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jComboBox4 = new javax.swing.JComboBox<>();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -108,36 +119,8 @@ public class NewJFrame extends javax.swing.JFrame {
         });
 
         jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-		
-		jComboBox2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-               
-                   try{
-			   jComboBox2ActionPerformed(evt);
-				   }catch(IOException e){
-					   e.printStackTrace();
-				   } catch (ClassNotFoundException e) {
-				   e.printStackTrace();
-				   }
-				   
-					   
-            }
-        });
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-		
-		jComboBox1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-               try{
-			   jComboBox1ActionPerformed(evt);
-			   }catch(IOException e){
-					   e.printStackTrace();
-				   } catch (ClassNotFoundException e) {
-				   e.printStackTrace();
-				   }
-            }
-        });
-		
 
         jLabel1.setText("Año: ");
 
@@ -146,19 +129,6 @@ public class NewJFrame extends javax.swing.JFrame {
         jLabel3.setText("Empresa: ");
 
         jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-		
-		jComboBox3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                
-				try{
-				jComboBox3ActionPerformed(evt);
-				}catch(IOException e){
-					   e.printStackTrace();
-				   } catch (ClassNotFoundException e) {
-				   e.printStackTrace();
-				   }
-            }
-        });
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel4.setText("Resumen del Mes");
@@ -169,20 +139,12 @@ public class NewJFrame extends javax.swing.JFrame {
         jLabel5.setText("Area:");
 
         jComboBox4.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-		
-		jComboBox4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                
-				try{
-				jComboBox4ActionPerformed(evt);
-				}catch(IOException e){
-					   e.printStackTrace();
-				   } catch (ClassNotFoundException e) {
-				   e.printStackTrace();
-				   }
-            }
-        });
-		
+
+        jLabel6.setText("Total:");
+
+        jLabel8.setText("jLabel8");
+
+        jLabel9.setText("jLabel9");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -220,7 +182,14 @@ public class NewJFrame extends javax.swing.JFrame {
                         .addGap(189, 189, 189))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(240, 240, 240))))
+                        .addGap(240, 240, 240))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel6)
+                        .addGap(131, 131, 131)
+                        .addComponent(jLabel8)
+                        .addGap(132, 132, 132)
+                        .addComponent(jLabel9)
+                        .addGap(130, 130, 130))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -245,8 +214,13 @@ public class NewJFrame extends javax.swing.JFrame {
                 .addGap(16, 16, 16)
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(17, 17, 17)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel9))
+                .addGap(27, 27, 27)
                 .addComponent(jButton1)
                 .addGap(24, 24, 24))
         );
@@ -254,6 +228,57 @@ public class NewJFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void postInitComponents(){
+        
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+               try{
+			   jComboBox1ActionPerformed(evt);
+			   }catch(IOException | ClassNotFoundException e){
+					   e.printStackTrace();
+				   }
+            }
+        });
+        
+        jComboBox2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+               
+                   try{
+			   jComboBox2ActionPerformed(evt);
+				   }catch(IOException | ClassNotFoundException e){
+					   e.printStackTrace();
+				   }
+				   
+					   
+            }
+        });
+        
+        	jComboBox3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                
+				try{
+				jComboBox3ActionPerformed(evt);
+				}catch(IOException | ClassNotFoundException e){
+					   e.printStackTrace();
+				   }
+            }
+        });
+        
+                jComboBox4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                
+				try{
+				jComboBox4ActionPerformed(evt);
+				}catch(IOException | ClassNotFoundException e){
+					   e.printStackTrace();
+				   }
+            }
+        });
+        
+    }
+            
+    
+    
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
      
         
@@ -318,12 +343,14 @@ public class NewJFrame extends javax.swing.JFrame {
     }
 	
 	
-	
-	//GEN-LAST:event_jButton1ActionPerformed
     }
+	//GEN-LAST:event_jButton1ActionPerformed
+
 	
     	 private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) throws IOException, FileNotFoundException, ClassNotFoundException {  
              //Año
+             listaMov=  getdata.getResumenCuentasMes(fechaForm,empresaForm,areaForm);
+             
              System.out.println(jComboBox1.getSelectedItem().toString());
            añoForm=Integer.parseInt(jComboBox1.getSelectedItem().toString());
            fechaForm= Integer.toString(añoForm)+mesForm+"01";
@@ -332,7 +359,12 @@ public class NewJFrame extends javax.swing.JFrame {
                getData data=new getData();
         //jComboBox4.setModel(new javax.swing.DefaultComboBoxModel(data.getAreasNegocios(fechaForm, empresaForm,true).toArray()));
            
-             llenarTabla(empresaForm, añoForm, mesForm,areaForm);
+             llenarTabla(listaMov,empresaForm, añoForm, mesForm,areaForm);
+             
+             int[] totales=this.getTotalesMov(listaMov);
+            jLabel8.setText(Integer.toString(totales[0]));
+             jLabel9.setText(Integer.toString(totales[1]));
+             
            
 // TODO add your handling code here:
     } 
@@ -340,7 +372,8 @@ public class NewJFrame extends javax.swing.JFrame {
 	 private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) throws IOException, FileNotFoundException, ClassNotFoundException {                                           
              //Mes 
              //System.out.println(jComboBox2.getSelectedIndex());
-            int mes=jComboBox2.getSelectedIndex()+1; //comienza de 0 aumentamos 1 para que se adapte al real
+            listaMov=  getdata.getResumenCuentasMes(fechaForm,empresaForm,areaForm);
+             int mes=jComboBox2.getSelectedIndex()+1; //comienza de 0 aumentamos 1 para que se adapte al real
            mesForm= mes>=10 ? Integer.toString(mes) : "0"+Integer.toString(mes)   ;  
            fechaForm= Integer.toString(añoForm)+mesForm+"01";
               System.out.println(empresaForm+" "+añoForm+" "+mesForm);  
@@ -348,7 +381,11 @@ public class NewJFrame extends javax.swing.JFrame {
                getData data=new getData();
         //jComboBox4.setModel(new javax.swing.DefaultComboBoxModel(data.getAreasNegocios(fechaForm, empresaForm,true).toArray()));
            
-           llenarTabla(empresaForm, añoForm, mesForm,areaForm);
+        int[] totales=this.getTotalesMov(listaMov);
+            jLabel8.setText(Integer.toString(totales[0]));
+             jLabel9.setText(Integer.toString(totales[1]));
+        
+           llenarTabla(listaMov,empresaForm, añoForm, mesForm,areaForm);
           
              
     } 
@@ -356,27 +393,39 @@ public class NewJFrame extends javax.swing.JFrame {
 	 private void jComboBox3ActionPerformed(java.awt.event.ActionEvent evt) throws IOException, FileNotFoundException, ClassNotFoundException {    
             //Empresa
             
-              empresaForm=jComboBox3.getSelectedIndex(); //empresa coincide con el nombre
+              
+            listaMov=  getdata.getResumenCuentasMes(fechaForm,empresaForm,areaForm);
+            
+            empresaForm=jComboBox3.getSelectedIndex(); //empresa coincide con el nombre
               
                  System.out.println(empresaForm+" "+añoForm+" "+mesForm);
                  
                   getData data=new getData();
         jComboBox4.setModel(new javax.swing.DefaultComboBoxModel(data.getAreasNegocios(fechaForm, empresaForm,true).toArray()));
+               
+        int[] totales=this.getTotalesMov(listaMov);
+            jLabel8.setText(Integer.toString(totales[0]));
+             jLabel9.setText(Integer.toString(totales[1]));
                  
-                 
-              llenarTabla(empresaForm, añoForm, mesForm,areaForm);
+              llenarTabla(listaMov,empresaForm, añoForm, mesForm,areaForm);
         // TODO add your handling code here:
     } 
          
-         	 private void jComboBox4ActionPerformed(java.awt.event.ActionEvent evt) throws IOException, FileNotFoundException, ClassNotFoundException {    
+         private void jComboBox4ActionPerformed(java.awt.event.ActionEvent evt) throws IOException, FileNotFoundException, ClassNotFoundException {    
             //Area
             
-              areaForm=jComboBox4.getSelectedItem().toString(); //empresa coincide con el nombre
+            listaMov=  getdata.getResumenCuentasMes(fechaForm,empresaForm,areaForm);  
+            areaForm=jComboBox4.getSelectedItem().toString(); //empresa coincide con el nombre
               
                  System.out.println(empresaForm+" "+añoForm+" "+mesForm+" "+areaForm);
               
-              llenarTabla(empresaForm, añoForm, mesForm,areaForm);
-        // TODO add your handling code here:
+             int[] totales=this.getTotalesMov(listaMov);
+            jLabel8.setText(Integer.toString(totales[0]));
+             jLabel9.setText(Integer.toString(totales[1]));
+                 
+                 llenarTabla(listaMov,empresaForm, añoForm, mesForm,areaForm);
+       
+              // TODO add your handling code here:
     } 
 	
 	
@@ -426,14 +475,12 @@ public class NewJFrame extends javax.swing.JFrame {
         
     }
     
-   public  void llenarTabla(int empresa, int año,String mes,String area) throws IOException, FileNotFoundException, ClassNotFoundException{
+   public  void llenarTabla( List<MovContable> lista,int empresa, int año,String mes,String area) throws IOException, FileNotFoundException, ClassNotFoundException{
         
        System.out.println("print "+empresa+" "+mes+" "+año );
        String fecha=Integer.toString(año)+mes+"01";
        
-         List<MovContable> lista= new ArrayList(); 
-        getData getdata=new getData();
-        lista=getdata.getResumenCuentasMes(fecha,empresa,area);
+        
  
            String[] titulos={"Nº Cuenta","Nombre","Debe","Haber"}; 
            String[] datos= new String[4]; 
@@ -536,9 +583,33 @@ public class NewJFrame extends javax.swing.JFrame {
         }
         
         
+    
+        
+        
         
         
     }
+    
+        public int[] getTotalesMov(List<MovContable> listaMov){
+            int debe=0;
+            int haber=0;
+            int[] totales= new int[2];
+          
+            for(MovContable mov:listaMov){
+                debe=debe+mov.getDebe();
+                haber=haber+mov.getHaber();
+
+            }
+            
+            
+            
+            totales[0]= debe;
+           totales[1]=haber;
+                
+           
+           return totales;
+            
+        }
     
     
 
@@ -553,7 +624,10 @@ public class NewJFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
