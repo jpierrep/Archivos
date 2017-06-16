@@ -256,63 +256,145 @@ public class getData extends Dao {
         stmt = this.con.createStatement();
       //      rs = stmt.executeQuery("SELECT idTest FROM relato WHERE test_idTest ='"+rutExaminado+"' ORDER BY idTest ASC");
             // rs = stmt.executeQuery("SELECT idRelato FROM relato WHERE test_idTest =511");
-                String queryString = "SELECT \n" +
-"      [CTA3]\n" +
-"      ,CTA3_DESC\n" +
-"      ,case when [DEBE-HABER]='DEBE' then  SUM([VARIABLE_MONTO]) else 0 end as 'DEBE'\n" +
-"      ,case when [DEBE-HABER]='HABER' then  SUM([VARIABLE_MONTO]) else 0 end as 'HABER'\n" +
-"      ,SUM([VARIABLE_MONTO]) as 'MONTO'\n" +
-"      \n" +
-"       from\n" +
+                String queryString = " SELECT  \n" +
+"      [CTA3] \n" +
+"      ,CTA3_DESC \n" +
+"      ,case when [DEBE-HABER]='DEBE' then  SUM([VARIABLE_MONTO]) else 0 end as 'DEBE' \n" +
+"      ,case when [DEBE-HABER]='HABER' then  SUM([VARIABLE_MONTO]) else 0 end as 'HABER' \n" +                      
+"      ,SUM([VARIABLE_MONTO]) as 'MONTO' \n" +
+"       \n" +
+"       from \n" +
+" \n" +
+"( \n" +
+"SELECT [CENCO2_CODI] \n" +
+"      ,[FECHA] \n" +
+"      ,[VARIABLE_CODI] \n" +
+"      ,[VARIABLE_MONTO] \n" +
+"      ,[AREA_CODI] \n" +
+"      ,[EMP_CODI] \n" +
+"      ,case when VARIABLE_CODI IN ('H008','H007','H001','H650') then '50-01-001' \n" +
+"        when VARIABLE_CODI IN ('H003','H002') then '50-01-003'  \n" +
+"        when VARIABLE_CODI IN ('H031','H030','H029') then '50-01-002' \n" +
+"        when VARIABLE_CODI IN ('H350','H074','H044','H043','H024','H020','H013','H050') then '50-01-004' \n" +
+"        when VARIABLE_CODI IN ('H073','H064','H062','H060') then '50-01-006' \n" +
+"         when VARIABLE_CODI IN ('H065','H063','H061') then '50-01-007' -- se añadio completo\n" +
+"        when VARIABLE_CODI IN ('H351','H080') then '50-01-005' \n" +
+"        when VARIABLE_CODI IN ('H027','H026','H025') then '50-01-014' \n" +
+"        when VARIABLE_CODI IN ('P991') then '50-01-008' \n" +
+"        when VARIABLE_CODI IN ('D200') then '50-01-009' \n" +
+"        when VARIABLE_CODI IN ('H085') then '50-01-016' \n" +
+"        when VARIABLE_CODI IN ('P205') then '50-01-018' \n" +
+"        when VARIABLE_CODI IN ('P044') then '50-01-022' \n" +
+"        when VARIABLE_CODI IN ('H016') then '50-01-023' \n" +
+" \n" +
+"               --OTRAS CUENTAS \n" +
+"        --DEBE-- \n" +
+"        when VARIABLE_CODI IN ('H072','H071','H015') then '20-01-106' \n" +
 "\n" +
-"(\n" +
-"SELECT [CENCO2_CODI]\n" +
-"      ,[FECHA]\n" +
-"      ,[VARIABLE_CODI]\n" +
-"      ,[VARIABLE_MONTO]\n" +
-"      ,[AREA_CODI]\n" +
-"      ,[EMP_CODI]\n" +
-"      ,case when VARIABLE_CODI IN ('H008','H007','H001','H650') then '50-01-001'\n" +
-"        when VARIABLE_CODI IN ('H003','H002') then '50-01-003' \n" +
-"        when VARIABLE_CODI IN ('H031','H030','H029') then '50-01-002'\n" +
-"        when VARIABLE_CODI IN ('H350','H074','H044','H043','H024','H020','H013','H050') then '50-01-004'\n" +
-"        when VARIABLE_CODI IN ('H073','H064','H062','H060') then '50-01-006'\n" +
-"        when VARIABLE_CODI IN ('H351','H080') then '50-01-005'\n" +
-"        when VARIABLE_CODI IN ('H027','H026','H025') then '50-01-014'\n" +
-"        when VARIABLE_CODI IN ('P991') then '50-01-008'\n" +
-"        when VARIABLE_CODI IN ('D200') then '50-01-009'\n" +
-"        when VARIABLE_CODI IN ('H085') then '50-01-016'\n" +
-"        when VARIABLE_CODI IN ('P205') then '50-01-018'\n" +
-"        when VARIABLE_CODI IN ('P044') then '50-01-022'\n" +
-"        when VARIABLE_CODI IN ('P016') then '50-01-023'\n" +
-"       --HABER\n" +
-"       when VARIABLE_CODI IN ('D090') then '50-01-001'\n" +
+"        \n" +
+"        \n" +
+"       end as 'CTA3' \n" +
+"       ,'DEBE' as  'DEBE-HABER' \n" +
+"         \n" +
+"\n" +
 "       \n" +
-"       \n" +
-"       end as 'CTA3'\n" +
-"       ,case when VARIABLE_CODI in ('H008','H007','H001','H650','H003','H002','H031','H030','H029','H350','H074','H044','H043','H024','H020','H013','H050',\n" +
-"       'H073','H064','H062','H060','H351','H080','H027','H026','H025','P991','D200','H085','P205','P044','P016') then 'DEBE' \n" +
-"          when variable_codi in('D090') then 'HABER' end as 'DEBE-HABER' \n" +
-"      \n" +
-"  FROM [Inteligencias].[dbo].[RRHH_ESTRUCTURA_SUELDO]\n" +
-"  \n" +
-//"  where DIA_DESC='HASTA MES EN CURSO' and ESTADO_PER='V' and EMP_CODI="+empresa+" and FECHA='20170101' and AREA_CODI='002' \n" +
-"  where DIA_DESC='HASTA MES EN CURSO' and ESTADO_PER='V' and EMP_CODI="+empresa+" and FECHA='"+fecha+"'"+areaQuery+" \n" +
-                        "  \n" +
-"  )a\n" +
-"  \n" +
-"  left join Inteligencias.dbo.CUENTAS_APERTURA_FUNC as ap on ap.CTA3_CODI=a.CTA3 \n" +
+"  FROM [Inteligencias].[dbo].[RRHH_ESTRUCTURA_SUELDO] \n" +
 "   \n" +
-"   where [CTA3] is not null\n" +
-"  \n" +
-"   group by \n" +
-"  \n" +
+"--  where DIA_DESC='HASTA MES EN CURSO' and ESTADO_PER='V' and EMP_CODI=empresa and FECHA='20170101' and AREA_CODI='002'  \n" +
+"  where DIA_DESC='HASTA MES EN CURSO'    and ESTADO_PER='V'  and  EMP_CODI="+empresa+" and FECHA='"+fecha+"' "+areaQuery+"  \n" +"    \n" +
+"  and VARIABLE_CODI in ('H008','H007','H001','H650','H003','H002','H031','H030','H029','H350','H074','H044','H043','H024','H020','H013','H050', \n" +
+"       'H073','H064','H062','H060','H065','H063','H061','H351','H080','H027','H026','H025','P991','D200','H085','P205','P044','H016'\n" +
+"       --OTRAS CUENTAS\n" +
+"       ,'H072','H071','H015'\n" +
+"       )\n" +
+"       \n" +
+"        )a \n" +
+"   \n" +
+"  left join Inteligencias.dbo.CUENTAS_APERTURA_FUNC as ap on ap.CTA3_CODI=a.CTA3  \n" +
+"    \n" +
+"   where [CTA3] is not null \n" +
+"   \n" +
+"   group by  \n" +
+"   \n" +
+" \n" +
+" \n" +
+"       \n" +
+"      [CTA3] \n" +
+"      ,ap.CTA3_DESC \n" +
+"      ,[DEBE-HABER]\n" +
 "\n" +
-"\n" +
+"  \n" +
+"  \n" +
+"  UNION\n" +
+"  \n" +
+"  SELECT  \n" +
+"      [CTA3] \n" +
+"      ,CTA3_DESC \n" +
+"      ,case when [DEBE-HABER]='DEBE' then  SUM([VARIABLE_MONTO]) else 0 end as 'DEBE' \n" +
+"      ,case when [DEBE-HABER]='HABER' then  SUM([VARIABLE_MONTO]) else 0 end as 'HABER' \n" +
+"      ,SUM([VARIABLE_MONTO]) as 'MONTO' \n" +
+"       \n" +
+"       from \n" +
+" \n" +
+"( \n" +
+"  \n" +
+"  \n" +
+"  SELECT [CENCO2_CODI] \n" +
+"      ,[FECHA] \n" +
+"      ,[VARIABLE_CODI] \n" +
+"      ,[VARIABLE_MONTO] \n" +
+"      ,[AREA_CODI] \n" +
+"      ,[EMP_CODI] \n" +
+"      ,case \n" +
+"       --HABER \n" +
+"       when VARIABLE_CODI IN ('D090') then '50-01-001' \n" +
+"       \n" +
+"               --OTRAS CUENTAS \n" +
+"        --HABER \n" +
+"        when VARIABLE_CODI IN ('P205','D200','D009','D007','D006','D005','D004','D003') then '20-01-107' \n" +
+"        when VARIABLE_CODI IN ('D021') then '20-01-108' \n" +
+"        when VARIABLE_CODI IN ('D022','D020') then '20-01-109' \n" +
+"        when VARIABLE_CODI IN ('D040','D032','D031','D030') then '20-01-110' \n" +
+"        when VARIABLE_CODI IN ('D050') then '20-01-111' \n" +
+"        when VARIABLE_CODI IN ('D080','D065') then '20-01-060' \n" +
+"        when VARIABLE_CODI IN ('D070') then '20-01-112' \n" +
+"        when VARIABLE_CODI IN ('P991') then '20-01-113' \n" +
+"        when VARIABLE_CODI IN ('H303') then '20-01-072' \n" +
+"        when VARIABLE_CODI IN ('D063','D062','D060') then '10-01-081' \n" +
+"        when VARIABLE_CODI IN ('D091') then '40-03-999' \n" +
+"        \n" +
+"        \n" +
+"       end as 'CTA3'  \n" +
+"         ,'HABER' as 'DEBE-HABER'  \n" +
+"       \n" +
+"  FROM [Inteligencias].[dbo].[RRHH_ESTRUCTURA_SUELDO] \n" +
+"   \n" +
+"--  where DIA_DESC='HASTA MES EN CURSO' and ESTADO_PER='V' and EMP_CODI=empresa and FECHA='20170101' and AREA_CODI='002'  \n" +
+"  where DIA_DESC='HASTA MES EN CURSO'    and ESTADO_PER='V'  and  EMP_CODI="+empresa+" and FECHA='"+fecha+"' "+areaQuery+"  \n" +"    \n" +
+"  and variable_codi in('D090'\n" +
+"          --OTRAS CUENTAS\n" +
+"          ,'P205','D200','D009','D007','D006','D005','D004','D003','D021','D022','D020','D040','D032','D031','D030','D050','D080','D065'\n" +
+"          ,'D070','P991','H303','D063','D062','D060','D091')\n" +
+"          \n" +
+"                  )a \n" +
+"   \n" +
+"  left join Inteligencias.dbo.CUENTAS_APERTURA_FUNC as ap on ap.CTA3_CODI=a.CTA3  \n" +
+"    \n" +
+"   where [CTA3] is not null \n" +
+"   \n" +
+"   group by  \n" +
+"   \n" +
+" \n" +
+" \n" +
+"       \n" +
+"      [CTA3] \n" +
+"      ,ap.CTA3_DESC \n" +
+"      ,[DEBE-HABER]\n" +
 "      \n" +
-"      [CTA3]\n" +
-"      ,ap.CTA3_DESC\n" +
-"     ,[DEBE-HABER]\n" +
+"      order by cta3 asc\n" +
+"  \n" +
+"                           \n" +
+" \n" +
 "      ";
             
             
@@ -519,7 +601,7 @@ public class getData extends Dao {
         stmt = this.con.createStatement();
       //      rs = stmt.executeQuery("SELECT idTest FROM relato WHERE test_idTest ='"+rutExaminado+"' ORDER BY idTest ASC");
             // rs = stmt.executeQuery("SELECT idRelato FROM relato WHERE test_idTest =511");
-                String queryString = " SELECT [CENCO2_CODI] \n" +
+                                String queryString = " SELECT [CENCO2_CODI] \n" +
 "       ,[FECHA] \n" +
 "       ,[AREA_CODI] \n" +
 "       ,[EMP_CODI] \n" +

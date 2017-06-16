@@ -25,6 +25,7 @@ import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import java.awt.Color;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -281,6 +282,18 @@ public class NewJFrame extends javax.swing.JFrame {
     
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
      
+        List<String> listaArea= new ArrayList(); 
+        
+       
+        int[] debeHaberAreas=getTotalesMov( getdata.getResumenCuentasMes(fechaForm,empresaForm,"Todas"));
+        //Mostrar mensaje si no cuadra debe y haber
+        if(debeHaberAreas[1]!=debeHaberAreas[0]){
+          JOptionPane.showMessageDialog(null, "Debe y Haber general no coinciden, se generarán los archivos de las áreas cuyo Debe y Haber coincidan. ",
+  "Error", JOptionPane.ERROR_MESSAGE);  
+        }
+        
+        listaArea=getdata.getAreasNegocios(fechaForm, empresaForm,false);
+        //se deben generar los archivos solo de las areas cuadradas
         
         System.out.println("fecha "+fechaForm+", mes "+mesForm+",año "+añoForm+"empresa "+empresaForm);
         
@@ -306,12 +319,19 @@ public class NewJFrame extends javax.swing.JFrame {
           
           
           List<MovContable> listamov= new ArrayList(); 
-          List<String> listaArea= new ArrayList(); 
+
         getData getdata=new getData();
      //   listamov=getdata.getResumenCuentasMes("20170101",0);
           try {
-             listaArea=getdata.getAreasNegocios(fechaForm, empresaForm,false);
+             
               for (String area:listaArea){
+                  
+                  
+        int[] totalesArea=getTotalesMov(getdata.getResumenCuentasMes(fechaForm,empresaForm,area));
+           
+             if(totalesArea[1]==totalesArea[0]){ //solo si el debe y haber son iguales se genera el archivo
+        
+        
                   listamov=getdata.getResumenPorArea(fechaForm, empresaForm, area,"ADM",true); //ADMINITRATIVOS
                    exportarDiccionario(listamov,filepath,area,false); //el nombre del archivo será el area
                 
@@ -323,13 +343,14 @@ public class NewJFrame extends javax.swing.JFrame {
                  
                   exportarDiccionario(listamov,filepath,area,true); //el nombre del archivo será el area
                  
-                 
-             }
+             } //fin if
+             
+              } //fin for
               
               
               
          
-              JOptionPane.showMessageDialog(null,"Archivo generado correctamente.","Exito",JOptionPane.INFORMATION_MESSAGE);
+              JOptionPane.showMessageDialog(null,"Archivos generado correctamente.","Exito",JOptionPane.INFORMATION_MESSAGE);
           } catch (IOException ex) {
               Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
              JOptionPane.showMessageDialog(null, "Error al generar los archivos. "+ ex.toString(),
@@ -349,13 +370,14 @@ public class NewJFrame extends javax.swing.JFrame {
 	
     	 private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) throws IOException, FileNotFoundException, ClassNotFoundException {  
              //Año
-             listaMov=  getdata.getResumenCuentasMes(fechaForm,empresaForm,areaForm);
+             
              
              System.out.println(jComboBox1.getSelectedItem().toString());
            añoForm=Integer.parseInt(jComboBox1.getSelectedItem().toString());
            fechaForm= Integer.toString(añoForm)+mesForm+"01";
            
               System.out.println(empresaForm+" "+añoForm+" "+mesForm);
+              listaMov=  getdata.getResumenCuentasMes(fechaForm,empresaForm,areaForm);
                getData data=new getData();
         //jComboBox4.setModel(new javax.swing.DefaultComboBoxModel(data.getAreasNegocios(fechaForm, empresaForm,true).toArray()));
            
@@ -372,11 +394,12 @@ public class NewJFrame extends javax.swing.JFrame {
 	 private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) throws IOException, FileNotFoundException, ClassNotFoundException {                                           
              //Mes 
              //System.out.println(jComboBox2.getSelectedIndex());
-            listaMov=  getdata.getResumenCuentasMes(fechaForm,empresaForm,areaForm);
+            
              int mes=jComboBox2.getSelectedIndex()+1; //comienza de 0 aumentamos 1 para que se adapte al real
            mesForm= mes>=10 ? Integer.toString(mes) : "0"+Integer.toString(mes)   ;  
            fechaForm= Integer.toString(añoForm)+mesForm+"01";
               System.out.println(empresaForm+" "+añoForm+" "+mesForm);  
+           listaMov=  getdata.getResumenCuentasMes(fechaForm,empresaForm,areaForm);
               
                getData data=new getData();
         //jComboBox4.setModel(new javax.swing.DefaultComboBoxModel(data.getAreasNegocios(fechaForm, empresaForm,true).toArray()));
@@ -394,10 +417,10 @@ public class NewJFrame extends javax.swing.JFrame {
             //Empresa
             
               
-            listaMov=  getdata.getResumenCuentasMes(fechaForm,empresaForm,areaForm);
+            
             
             empresaForm=jComboBox3.getSelectedIndex(); //empresa coincide con el nombre
-              
+            listaMov=  getdata.getResumenCuentasMes(fechaForm,empresaForm,areaForm);
                  System.out.println(empresaForm+" "+añoForm+" "+mesForm);
                  
                   getData data=new getData();
@@ -413,9 +436,11 @@ public class NewJFrame extends javax.swing.JFrame {
          
          private void jComboBox4ActionPerformed(java.awt.event.ActionEvent evt) throws IOException, FileNotFoundException, ClassNotFoundException {    
             //Area
-            
-            listaMov=  getdata.getResumenCuentasMes(fechaForm,empresaForm,areaForm);  
+             
             areaForm=jComboBox4.getSelectedItem().toString(); //empresa coincide con el nombre
+            
+             listaMov=  getdata.getResumenCuentasMes(fechaForm,empresaForm,areaForm);  
+           
               
                  System.out.println(empresaForm+" "+añoForm+" "+mesForm+" "+areaForm);
               
@@ -480,7 +505,6 @@ public class NewJFrame extends javax.swing.JFrame {
        System.out.println("print "+empresa+" "+mes+" "+año );
        String fecha=Integer.toString(año)+mes+"01";
        
-        
  
            String[] titulos={"Nº Cuenta","Nombre","Debe","Haber"}; 
            String[] datos= new String[4]; 
@@ -493,13 +517,24 @@ public class NewJFrame extends javax.swing.JFrame {
           //  System.out.println("datos"+datos[0]);
             
            tableModel.addRow(datos);
-            
+            jTable1.setModel(tableModel);
+           
+           int[] debeHaberAreas=getTotalesMov( lista);
+      
+        if(debeHaberAreas[1]!=debeHaberAreas[0]){
+           
+          jLabel8.setForeground (Color.red); 
+          jLabel9.setForeground (Color.red); 
+        }else{
+             jLabel8.setForeground (Color.BLACK); 
+             jLabel9.setForeground (Color.BLACK); 
         }
         
              
-               jTable1.setModel(tableModel);
+              
     
     }
+   }
         
     
    
