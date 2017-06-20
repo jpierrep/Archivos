@@ -26,6 +26,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import java.awt.Color;
+import java.io.File;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -317,6 +318,13 @@ public class NewJFrame extends javax.swing.JFrame {
         String filepath=dir.getText()+"\\"+filename.getText();
           System.out.println(filepath);
           
+          File folder=new File(filepath+"\\"+jComboBox3.getSelectedItem().toString());
+          if(!folder.exists()){
+              folder.mkdir();}
+          filepath=filepath+"\\"+jComboBox3.getSelectedItem().toString();
+          
+       
+          
           
           List<MovContable> listamov= new ArrayList(); 
 
@@ -333,15 +341,15 @@ public class NewJFrame extends javax.swing.JFrame {
         
         
                   listamov=getdata.getResumenPorArea(fechaForm, empresaForm, area,"ADM",true); //ADMINITRATIVOS
-                   exportarDiccionario(listamov,filepath,area,false); //el nombre del archivo será el area
+                   exportarDiccionario(listamov,filepath,Integer.toString(empresaForm)+"-"+area,false); //el nombre del archivo será el area
                 
                    listamov=getdata.getResumenPorArea(fechaForm, empresaForm, area,"ADM",false); // NO ADMINISTRATIVOS
                  
-                  exportarDiccionario(listamov,filepath,area,true); //el nombre del archivo será el area
+                  exportarDiccionario(listamov,filepath,Integer.toString(empresaForm)+"-"+area,true); //el nombre del archivo será el area
                   
                   listamov=getdata.getOtrasCuentas(fechaForm, empresaForm, area); // NO ADMINISTRATIVOS
                  
-                  exportarDiccionario(listamov,filepath,area,true); //el nombre del archivo será el area
+                  exportarDiccionario(listamov,filepath,Integer.toString(empresaForm)+"-"+area,true); //el nombre del archivo será el area
                  
              } //fin if
              
@@ -558,6 +566,9 @@ public class NewJFrame extends javax.swing.JFrame {
         
     public static void exportarDiccionario(List<MovContable> lista,String path,String nombreArchivo,boolean sobrescribe) throws IOException, FileNotFoundException, ClassNotFoundException{
       
+        
+        
+        
  java.util.Date utilDate = new java.util.Date();
  DateFormat df = new SimpleDateFormat("dd-MM-YYYY");
  String fecha=df.format(utilDate);
@@ -592,8 +603,12 @@ public class NewJFrame extends javax.swing.JFrame {
                        
                    }    
              
-            pw.println(termino.getCodCuenta()+","+termino.getDebe()+","+termino.getHaber()+",REMUNERACIONES DEL MES AUT,,,,,,,,,,,"+termino.getCentroCosto()+",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,");
-   
+             if(termino.getCodCuenta().startsWith("50-")){
+            pw.println(termino.getCodCuenta()+","+termino.getDebe()+","+termino.getHaber()+",REMUNERACIONES DEL MES,,,,,,,,,,,"+termino.getCentroCosto()+",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,");
+             }else{
+             pw.println(termino.getCodCuenta()+","+termino.getDebe()+","+termino.getHaber()+",REMUNERACIONES DEL MES "+termino.getNombre()+" ,,,,,,,,,,,,,,,"+termino.getCodAux()+","+termino.getTipoMov()+","+termino.getNumDoc()+",,,,,,,,,,,,,,,,,,,,,,,,,,,,");  
+             }
+             
   //           pw.println(termLamina.getTermino()+","+connotacion+"\t"+termLamina.getTerminosAsociadosString());
                 
                 

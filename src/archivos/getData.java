@@ -449,8 +449,10 @@ public class getData extends Dao {
           public List<MovContable> getResumenPorArea(String fecha,int empresa,String area,String likeFicha,boolean notlike){
               //genera statement para la ficha si es administrativo o no
              String notlikevarchar=notlike==true? "":"not";
+             
 
-              String likeStmt= likeFicha==null ? "": "and FICHA "+notlikevarchar+"  like '%"+likeFicha+"%' ";
+             // String likeStmt= likeFicha==null ? "": "and FICHA "+notlikevarchar+"  like '%"+likeFicha+"%' ";
+             String likeStmt= likeFicha==null ? "": "and "+notlikevarchar+" (FICHA  like 'ADM%' or FICHA like '13ADM%' or FICHA='HOVIC75')  ";
               
               
         Statement stmt = null;
@@ -516,8 +518,6 @@ public class getData extends Dao {
 "   \n" +
 "  [CENCO2_CODI] \n" +
 "      ,[FECHA] \n" +
-"      ,[VARIABLE_CODI] \n" +
-"      ,[VARIABLE_MONTO] \n" +
 "      ,[AREA_CODI] \n" +
 "      ,[EMP_CODI] \n" +
 "      ,[CTA3] \n" +
@@ -601,63 +601,71 @@ public class getData extends Dao {
         stmt = this.con.createStatement();
       //      rs = stmt.executeQuery("SELECT idTest FROM relato WHERE test_idTest ='"+rutExaminado+"' ORDER BY idTest ASC");
             // rs = stmt.executeQuery("SELECT idRelato FROM relato WHERE test_idTest =511");
-                                String queryString = " SELECT [CENCO2_CODI] \n" +
-"       ,[FECHA] \n" +
-"       ,[AREA_CODI] \n" +
-"       ,[EMP_CODI] \n" +
-"       ,[CTA3] \n" +
-"       ,[DEBE-HABER] \n" +
-"       ,SUM([VARIABLE_MONTO]) as MONTO \n" +
-"        \n" +
-"        from \n" +
-"  \n" +
-" ( \n" +
-" SELECT [CENCO2_CODI] \n" +
-"       ,[FECHA] \n" +
-"       ,[VARIABLE_CODI] \n" +
-"       ,[VARIABLE_MONTO] \n" +
-"       ,[AREA_CODI] \n" +
-"       ,[EMP_CODI] \n" +
-"       ,case \n" +
-"        \n" +
-"        --OTRAS CUENTAS\n" +
-"        --DEBE--\n" +
-"        when VARIABLE_CODI IN ('H072','H071','H015') then '20-01-106'\n" +
-"        --HABER\n" +
-"        when VARIABLE_CODI IN ('P205','D200','D009','D007','D006','D005','D004','D003') then '20-01-107'\n" +
-"        when VARIABLE_CODI IN ('D021') then '20-01-108'\n" +
-"        when VARIABLE_CODI IN ('D022','D020') then '20-01-109'\n" +
-"        when VARIABLE_CODI IN ('D040','D032','D031','D030') then '20-01-110'\n" +
-"        when VARIABLE_CODI IN ('D050') then '20-01-111'\n" +
-"        when VARIABLE_CODI IN ('D080','D065') then '20-01-060'\n" +
-"        when VARIABLE_CODI IN ('D070') then '20-01-112'\n" +
-"        when VARIABLE_CODI IN ('P991') then '20-01-113'\n" +
-"        when VARIABLE_CODI IN ('H303') then '20-01-072'\n" +
-"        when VARIABLE_CODI IN ('D063','D062','D060') then '10-01-081'\n" +
-"        when VARIABLE_CODI IN ('D091') then '40-03-999'\n" +
+                                String queryString = "SELECT a.[CENCO2_CODI]     \n" +
+"        ,a.[FECHA]     \n" +
+"        ,a.[AREA_CODI]     \n" +
+"        ,a.[EMP_CODI]     \n" +
+"        ,a.[CTA3]     \n" +
+"        ,a.[DEBE-HABER]  \n" +
+"        ,a.[FICHA]    \n" +
+"        ,pers.NOMBRES\n" +
+"        ,pers.RUT\n" +
+"        ,SUM(a.[VARIABLE_MONTO]) as MONTO     \n" +
+"             \n" +
+"         from     \n" +
+"       \n" +
+"  (     \n" +
+"  SELECT [CENCO2_CODI]     \n" +
+"        ,[FECHA]     \n" +
+"        ,[VARIABLE_CODI]     \n" +
+"        ,[VARIABLE_MONTO]     \n" +
+"        ,[AREA_CODI]     \n" +
+"        ,[EMP_CODI] \n" +
+"        ,[FICHA]    \n" +
+"        ,case     \n" +
+"             \n" +
+"         --OTRAS CUENTAS    \n" +
+"         --DEBE--    \n" +
+"         when VARIABLE_CODI IN ('H072','H071','H015') then '20-01-106'    -- En esta lista si aparece otra cuenta al debe que coincida con una al haber es necesario separar las querys y hacer union\n" +
+"         --HABER    \n" +
+"         when VARIABLE_CODI IN ('P205','D200','D009','D007','D006','D005','D004','D003') then '20-01-107'    \n" +
+"         when VARIABLE_CODI IN ('D021') then '20-01-108'    \n" +
+"         when VARIABLE_CODI IN ('D022','D020') then '20-01-109'    \n" +
+"         when VARIABLE_CODI IN ('D040','D032','D031','D030') then '20-01-110'    \n" +
+"         when VARIABLE_CODI IN ('D050') then '20-01-111'    \n" +
+"         when VARIABLE_CODI IN ('D080','D065') then '20-01-060'    \n" +
+"         when VARIABLE_CODI IN ('D070') then '20-01-112'    \n" +
+"         when VARIABLE_CODI IN ('P991') then '20-01-113'    \n" +
+"         when VARIABLE_CODI IN ('H303') then '20-01-072'    \n" +
+"         when VARIABLE_CODI IN ('D063','D062','D060') then '10-01-081'    \n" +
+"         when VARIABLE_CODI IN ('D091') then '40-03-999'    \n" +
+"              \n" +
+"              \n" +
+"         end as 'CTA3'     \n" +
+"         ,case when VARIABLE_CODI in ('H072','H071','H015') then 'DEBE'      \n" +
+"            when variable_codi in('P205','D200','D009','D007','D006','D005','D004','D003','D021','D022','D020','D040','D032','D031','D030','D050','D080','D070','P991','H303','D063','D062','D060','D091') then 'HABER' end as 'DEBE-HABER'      \n" +
+"             \n" +
+"    FROM [Inteligencias].[dbo].[RRHH_ESTRUCTURA_SUELDO]     \n" +
 "         \n" +
+"  where DIA_DESC='HASTA MES EN CURSO'    and ESTADO_PER='V'  and  EMP_CODI="+empresa+" and FECHA='"+fecha+"' and AREA_CODI='" +area+"' \n" +
+"    )a  \n" +
+"    left join inteligencias.dbo.RRHH_PERSONAL_SOFT as pers  on a.FICHA=pers.FICHA and a.EMP_CODI=pers.EMP_CODI and a.FECHA=pers.FECHA_SOFT   \n" +
+"          \n" +
+"     where [CTA3] is not null     \n" +
 "         \n" +
-"        end as 'CTA3' \n" +
-"        ,case when VARIABLE_CODI in ('H072','H071','H015') then 'DEBE'  \n" +
-"           when variable_codi in('P205','D200','D009','D007','D006','D005','D004','D003','D021','D022','D020','D040','D032','D031','D030','D050','D080','D070','P991','H303','D063','D062','D060','D091') then 'HABER' end as 'DEBE-HABER'  \n" +
-"        \n" +
-"   FROM [Inteligencias].[dbo].[RRHH_ESTRUCTURA_SUELDO] \n" +
-"    \n" +
-"  where DIA_DESC='HASTA MES EN CURSO'    and ESTADO_PER='V'  and  EMP_CODI="+empresa+" and FECHA='"+fecha+"' and AREA_CODI='" +area+"'  \n" +"    \n" +
-"   )a \n" +
-"     \n" +
-"    where [CTA3] is not null \n" +
-"    \n" +
-"    group by  \n" +
-"    \n" +
-"   [CENCO2_CODI] \n" +
-"       ,[FECHA] \n" +
-"       ,[VARIABLE_CODI] \n" +
-"       ,[VARIABLE_MONTO] \n" +
-"       ,[AREA_CODI] \n" +
-"       ,[EMP_CODI] \n" +
-"       ,[CTA3] \n" +
-"       ,[DEBE-HABER] ";
+"     group by      \n" +
+"         \n" +
+"    a.[CENCO2_CODI]     \n" +
+"        ,a.[FECHA]     \n" +
+"        ,a.[VARIABLE_CODI]     \n" +
+"        ,a.[VARIABLE_MONTO]     \n" +
+"        ,a.[AREA_CODI]     \n" +
+"        ,a.[EMP_CODI]     \n" +
+"        ,a.[CTA3]     \n" +
+"        ,a.[DEBE-HABER] \n" +
+"        ,a.[FICHA] \n" +
+"        ,pers.NOMBRES\n" +
+"        ,pers.RUT";
                 
          //       System.out.println(queryString);
             
@@ -671,18 +679,23 @@ public class getData extends Dao {
              int haber=0;
              
              if( rs.getObject(6).toString().equals("DEBE")){
-                 debe=((Number)rs.getObject(7)).intValue();
+                 debe=((Number)rs.getObject(10)).intValue();
                 
             } if( rs.getObject(6).toString().equals("HABER")){
-                 haber=((Number)rs.getObject(7)).intValue();
+                 haber=((Number)rs.getObject(10)).intValue();
             }
              
           String centroCosto=rs.getObject(1).toString();
           String fechaMov=rs.getObject(2).toString();
           String areaMov=rs.getObject(3).toString();
           String empresaMov=rs.getObject(4).toString();
+          String tipoMov="TR"; //Traspaso
+          String ficha=rs.getObject(7).toString();
+          String nombres=rs.getObject(8).toString();
+          String rut=rs.getObject(9).toString();
                 
-              MovContable mov=new MovContable(num_cuenta, centroCosto, area, fecha, empresaMov, debe, haber);
+       //       MovContable mov=new MovContable(num_cuenta, centroCosto, area, fecha, empresaMov, debe, haber);
+        MovContable mov=new MovContable(num_cuenta, centroCosto, area, fecha, empresaMov, debe, haber,tipoMov,ficha,rut,nombres);
                 lista.add(mov);
             } 
 
