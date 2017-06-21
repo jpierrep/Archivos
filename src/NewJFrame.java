@@ -604,9 +604,9 @@ public class NewJFrame extends javax.swing.JFrame {
                    }    
              
              if(termino.getCodCuenta().startsWith("50-")){
-            pw.println(termino.getCodCuenta()+","+termino.getDebe()+","+termino.getHaber()+",REMUNERACIONES DEL MES,,,,,,,,,,,"+termino.getCentroCosto()+",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,");
+            pw.println(termino.getCodCuenta()+","+termino.getDebe()+","+termino.getHaber()+",REMUNERACIONES DEL MES,,,,,,,,,,,,"+termino.getCentroCosto()+",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,");
              }else{
-             pw.println(termino.getCodCuenta()+","+termino.getDebe()+","+termino.getHaber()+",REMUNERACIONES DEL MES "+termino.getNombre()+" ,,,,,,,,,,,,,,,"+termino.getCodAux()+","+termino.getTipoMov()+","+termino.getNumDoc()+",,,,,,,,,,,,,,,,,,,,,,,,,,,,");  
+             pw.println(termino.getCodCuenta()+","+termino.getDebe()+","+termino.getHaber()+",REMUNERACIONES DEL MES "+termino.getNombre()+" ,,,,,,,,,,,,,,,"+termino.getCodAux()+","+termino.getTipoMov()+","+termino.getNumDoc()+",,,"+termino.getTipoMov()+","+termino.getNumDoc()+",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,");  
              }
              
   //           pw.println(termLamina.getTermino()+","+connotacion+"\t"+termLamina.getTerminosAsociadosString());
