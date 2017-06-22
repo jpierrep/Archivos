@@ -27,6 +27,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import java.awt.Color;
 import java.io.File;
+import java.text.ParseException;
+import java.util.Calendar;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -50,6 +52,7 @@ public class NewJFrame extends javax.swing.JFrame {
    private String mesForm="01";
    private String areaForm="Todas";
    private String fechaForm= Integer.toString(añoForm)+mesForm+"01";
+   private String procesoForm;
    private getData getdata=new getData();
    private  List<MovContable> listaMov=  getdata.getResumenCuentasMes(fechaForm,empresaForm,areaForm);
             
@@ -70,7 +73,8 @@ public class NewJFrame extends javax.swing.JFrame {
         
         getData data=new getData();
         jComboBox4.setModel(new javax.swing.DefaultComboBoxModel(data.getAreasNegocios(fechaForm, empresaForm,true).toArray()));
-    
+        jComboBox5.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Seleccione Proceso...","Anticipos","Remuneraciones","Reliquidaciones"  }));
+
     }
 
     /**
@@ -98,6 +102,8 @@ public class NewJFrame extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
+        jComboBox5 = new javax.swing.JComboBox<>();
+        jLabel10 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -148,6 +154,10 @@ public class NewJFrame extends javax.swing.JFrame {
 
         jLabel9.setText("jLabel9");
 
+        jComboBox5.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        jLabel10.setText("Proceso:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -171,10 +181,14 @@ public class NewJFrame extends javax.swing.JFrame {
                                     .addComponent(jComboBox2, javax.swing.GroupLayout.Alignment.LEADING, 0, 209, Short.MAX_VALUE)
                                     .addComponent(jComboBox3, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGap(46, 46, 46)
-                                .addComponent(jLabel5)
+                                .addGap(56, 56, 56)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel10)
+                                    .addComponent(jLabel5))
                                 .addGap(18, 18, 18)
-                                .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jComboBox5, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                 .addContainerGap(19, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
@@ -203,16 +217,21 @@ public class NewJFrame extends javax.swing.JFrame {
                     .addComponent(jLabel3)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel5)
-                        .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jComboBox5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel10)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel2))
+                            .addComponent(jLabel5))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1)))
+                    .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(16, 16, 16)
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -276,6 +295,17 @@ public class NewJFrame extends javax.swing.JFrame {
 				   }
             }
         });
+                
+                
+                    jComboBox5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+               try{
+			   jComboBox5ActionPerformed(evt);
+			   }catch(IOException | ClassNotFoundException e){
+					   e.printStackTrace();
+				   }
+            }
+        });
         
     }
             
@@ -283,6 +313,18 @@ public class NewJFrame extends javax.swing.JFrame {
     
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
      
+       
+        if(jComboBox5.getSelectedItem().toString().equals("Seleccione Proceso...")){ // inicia if proceso
+         // Caso en que no sea seleccionado el proceso
+            
+            JOptionPane.showMessageDialog(null, "Seleccione el Proceso a cargar ej. Liquidaciones, Reliquidaciones, etc.·",
+  "Error", JOptionPane.ERROR_MESSAGE);   
+          jLabel10.setForeground (Color.red); 
+            
+        }else{
+        // si seleccionó proceso, se marca negro el label
+            jLabel10.setForeground (Color.black); 
+        
         List<String> listaArea= new ArrayList(); 
         
        
@@ -341,15 +383,15 @@ public class NewJFrame extends javax.swing.JFrame {
         
         
                   listamov=getdata.getResumenPorArea(fechaForm, empresaForm, area,"ADM",true); //ADMINITRATIVOS
-                   exportarDiccionario(listamov,filepath,Integer.toString(empresaForm)+"-"+area,false); //el nombre del archivo será el area
+                   exportarDiccionario(procesoForm,listamov,filepath,Integer.toString(empresaForm)+"-"+area,false); //el nombre del archivo será el area
                 
                    listamov=getdata.getResumenPorArea(fechaForm, empresaForm, area,"ADM",false); // NO ADMINISTRATIVOS
                  
-                  exportarDiccionario(listamov,filepath,Integer.toString(empresaForm)+"-"+area,true); //el nombre del archivo será el area
+                  exportarDiccionario(procesoForm,listamov,filepath,Integer.toString(empresaForm)+"-"+area,true); //el nombre del archivo será el area
                   
                   listamov=getdata.getOtrasCuentas(fechaForm, empresaForm, area); // NO ADMINISTRATIVOS
                  
-                  exportarDiccionario(listamov,filepath,Integer.toString(empresaForm)+"-"+area,true); //el nombre del archivo será el area
+                  exportarDiccionario(procesoForm,listamov,filepath,Integer.toString(empresaForm)+"-"+area,true); //el nombre del archivo será el area
                  
              } //fin if
              
@@ -371,7 +413,7 @@ public class NewJFrame extends javax.swing.JFrame {
           
     }
 	
-	
+    } //fin if proceso
     }
 	//GEN-LAST:event_jButton1ActionPerformed
 
@@ -459,7 +501,17 @@ public class NewJFrame extends javax.swing.JFrame {
                  llenarTabla(listaMov,empresaForm, añoForm, mesForm,areaForm);
        
               // TODO add your handling code here:
-    } 
+    
+         
+         
+         } 
+         
+         	 private void jComboBox5ActionPerformed(java.awt.event.ActionEvent evt) throws IOException, FileNotFoundException, ClassNotFoundException {
+                     procesoForm=jComboBox5.getSelectedItem().toString(); //empresa coincide con el nombre
+                     System.out.println("proceso "+ procesoForm);
+                     
+                     
+                 }
 	
 	
 	
@@ -564,10 +616,10 @@ public class NewJFrame extends javax.swing.JFrame {
    
  
         
-    public static void exportarDiccionario(List<MovContable> lista,String path,String nombreArchivo,boolean sobrescribe) throws IOException, FileNotFoundException, ClassNotFoundException{
+    public static void exportarDiccionario(String proceso,List<MovContable> lista,String path,String nombreArchivo,boolean sobrescribe) throws IOException, FileNotFoundException, ClassNotFoundException{
       
         
-        
+ proceso=proceso.toUpperCase();
         
  java.util.Date utilDate = new java.util.Date();
  DateFormat df = new SimpleDateFormat("dd-MM-YYYY");
@@ -604,9 +656,9 @@ public class NewJFrame extends javax.swing.JFrame {
                    }    
              
              if(termino.getCodCuenta().startsWith("50-")){
-            pw.println(termino.getCodCuenta()+","+termino.getDebe()+","+termino.getHaber()+",REMUNERACIONES DEL MES,,,,,,,,,,,,"+termino.getCentroCosto()+",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,");
+            pw.println(termino.getCodCuenta()+","+termino.getDebe()+","+termino.getHaber()+","+proceso +" DEL MES,,,,,,,,,,,,"+termino.getCentroCosto()+",,,,,,"+termino.getUltimoDiaMes()+","+termino.getUltimoDiaMes()+",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,");
              }else{
-             pw.println(termino.getCodCuenta()+","+termino.getDebe()+","+termino.getHaber()+",REMUNERACIONES DEL MES "+termino.getNombre()+" ,,,,,,,,,,,,,,,"+termino.getCodAux()+","+termino.getTipoMov()+","+termino.getNumDoc()+",,,"+termino.getTipoMov()+","+termino.getNumDoc()+",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,");  
+             pw.println(termino.getCodCuenta()+","+termino.getDebe()+","+termino.getHaber()+","+proceso +" DEL MES"+termino.getNombre()+" ,,,,,,,,,,,,,,,"+termino.getCodAux()+","+termino.getTipoMov()+","+termino.getNumDoc()+","+termino.getUltimoDiaMes()+","+termino.getUltimoDiaMes()+","+termino.getTipoMov()+","+termino.getNumDoc()+",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,");  
              }
              
   //           pw.println(termLamina.getTermino()+","+connotacion+"\t"+termLamina.getTerminosAsociadosString());
@@ -661,6 +713,7 @@ public class NewJFrame extends javax.swing.JFrame {
             
         }
     
+
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -669,7 +722,9 @@ public class NewJFrame extends javax.swing.JFrame {
     private javax.swing.JComboBox jComboBox2;
     private javax.swing.JComboBox<String> jComboBox3;
     private javax.swing.JComboBox<String> jComboBox4;
+    private javax.swing.JComboBox<String> jComboBox5;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

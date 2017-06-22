@@ -204,4 +204,22 @@ public class MovContable {
         return ultimoDia;
     }
     
+              public String getUltimoDiaMes(){ // corresponde al mes en cuestion donde se efectua la contabilizacion (ultimo dia)
+        String ultimoDia="";
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyymmdd");
+        try {
+        java.util.Date fecha2=formatter.parse(fecha);
+         Calendar c = Calendar.getInstance();
+        c.setTime(fecha2);
+        c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));
+        SimpleDateFormat formatter2 = new SimpleDateFormat("dd/mm/yyyy");
+        ultimoDia=   formatter2.format(c.getTime()); 
+    
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return ultimoDia;
+    }
+    
+    
 }
