@@ -732,6 +732,101 @@ public class getData extends Dao {
      return lista;
     }
           
+          
+          public String calculaAuxFaltantes(String fecha,int empresa){
+              
+                           //genera statement para la ficha si es administrativo o no
+        String empSoftland="";   
+                           switch (empresa){
+                               case 0:empSoftland="GUARD";
+                               break;
+                                case 1:empSoftland="TECNOLOGIASSA";
+                               break;
+                               case 2:empSoftland="OUTSOURCINGSA";
+                               break;
+                               case 3:empSoftland="ODINLTDA";
+                               break;
+
+                           } 
+                           
+          String AuxiliaresFaltantes="";                  
+              
+        Statement stmt = null;
+        ResultSet rs = null;      
+      List<MovContable> lista= new ArrayList();   
+    try{
+           
+   
+        this.Conectar();
+      
+        stmt = this.con.createStatement();
+      //      rs = stmt.executeQuery("SELECT idTest FROM relato WHERE test_idTest ='"+rutExaminado+"' ORDER BY idTest ASC");
+            // rs = stmt.executeQuery("SELECT idRelato FROM relato WHERE test_idTest =511");
+                                String queryString = "select a.rut2,a.rut,a.nombres from (\n" +
+"\n" +
+" select  distinct  nombres,rut,\n" +
+" \n" +
+" convert(varchar,cast(replace(substring(  rut,1,(len(rut)-2)),'.','') as int)) as rut2\n" +
+"\n" +
+"  FROM [Inteligencias].[dbo].[RRHH_ESTRUCTURA_SUELDO] as a\n" +
+"\n" +
+"left join inteligencias.dbo.RRHH_PERSONAL_SOFT as pers  on a.FICHA=pers.FICHA and a.EMP_CODI=pers.EMP_CODI and a.FECHA=pers.FECHA_SOFT \n" +
+"  where DIA_DESC='HASTA MES EN CURSO'    and ESTADO_PER='V'  and  a.EMP_CODI="+empresa+" and FECHA='"+fecha+"'  \n" +
+"  \n" +
+"\n" +
+"\n" +
+")a\n" +
+"\n" +
+"where \n" +
+"not exists (select CodAux from "+empSoftland+".[softland].[cwtauxi]  as aux  where a.rut2=aux.CodAux)";
+                
+            // System.out.println(queryString);
+            
+            
+      rs = stmt.executeQuery(queryString);      
+           
+            while (rs.next()) {
+            
+           
+           AuxiliaresFaltantes=AuxiliaresFaltantes+"Auxiliar: "+rs.getObject(1).toString()+" Rut: "+rs.getObject(2).toString()+" Nombre: "+rs.getObject(3).toString()+"\n";
+
+            } 
+
+          //  System.out.println(" la lista es ");
+          //  for (String list: lista){
+          //      System.out.println("relato"+list);
+          //  }
+            
+            
+            /*stmt.setString(4, usuario.getRut())*/
+     
+       
+
+         } catch (SQLException e) {
+           
+        }  finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                    rs = null;
+                }
+                if (stmt != null) {
+                    stmt.close();
+                    stmt = null;
+                }
+                if (con != null) {
+                    con.close();
+                    con = null;
+                }
+            } catch (SQLException e) {
+            }
+        }
+  
+           return  AuxiliaresFaltantes;
+             
+              
+          }
+          
           //     public List<String> getAreasNegocios(String fecha,int empresa){
 //    
 //         

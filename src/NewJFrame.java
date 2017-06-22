@@ -322,6 +322,14 @@ public class NewJFrame extends javax.swing.JFrame {
           jLabel10.setForeground (Color.red); 
             
         }else{
+            String auxFaltantes=getdata.calculaAuxFaltantes(fechaForm,empresaForm);
+            
+            if(!auxFaltantes.equals("")){
+   JOptionPane.showMessageDialog(null, "Se han detectado los siguientes Auxiliares NO EXISTENTES en "+jComboBox3.getSelectedItem().toString()+": \n"+auxFaltantes,
+  "Auxiliares Faltantes", JOptionPane.ERROR_MESSAGE);  
+                
+            }else{
+            
         // si seleccionó proceso, se marca negro el label
             jLabel10.setForeground (Color.black); 
         
@@ -413,6 +421,7 @@ public class NewJFrame extends javax.swing.JFrame {
           
     }
 	
+       } //fin if auxiliares faltantes  
     } //fin if proceso
     }
 	//GEN-LAST:event_jButton1ActionPerformed
@@ -655,10 +664,10 @@ public class NewJFrame extends javax.swing.JFrame {
                        
                    }    
              
-             if(termino.getCodCuenta().startsWith("50-")){
+             if(termino.getCodCuenta().startsWith("50-")||termino.getCodCuenta().equals("40-03-999")){
             pw.println(termino.getCodCuenta()+","+termino.getDebe()+","+termino.getHaber()+","+proceso +" DEL MES,,,,,,,,,,,,"+termino.getCentroCosto()+",,,,,,"+termino.getUltimoDiaMes()+","+termino.getUltimoDiaMes()+",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,");
              }else{
-             pw.println(termino.getCodCuenta()+","+termino.getDebe()+","+termino.getHaber()+","+proceso +" DEL MES"+termino.getNombre()+" ,,,,,,,,,,,,,,,"+termino.getCodAux()+","+termino.getTipoMov()+","+termino.getNumDoc()+","+termino.getUltimoDiaMes()+","+termino.getUltimoDiaMes()+","+termino.getTipoMov()+","+termino.getNumDoc()+",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,");  
+             pw.println(termino.getCodCuenta()+","+termino.getDebe()+","+termino.getHaber()+","+proceso +" DEL MES "+termino.getNombre()+" ,,,,,,,,,,,,,,,"+termino.getCodAux()+","+termino.getTipoMov()+","+termino.getNumDoc()+","+termino.getUltimoDiaMes()+","+termino.getUltimoDiaMes()+","+termino.getTipoMov()+","+termino.getNumDoc()+",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,");  
              }
              
   //           pw.println(termLamina.getTermino()+","+connotacion+"\t"+termLamina.getTerminosAsociadosString());
