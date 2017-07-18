@@ -800,7 +800,7 @@ public class getData extends Dao {
             
             /*stmt.setString(4, usuario.getRut())*/
      
-       
+        System.out.println(queryString);   
 
          } catch (SQLException e) {
            
