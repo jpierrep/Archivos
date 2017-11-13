@@ -57,7 +57,7 @@ public class Archivos extends javax.swing.JFrame {
    private String procesoForm;
    private getData getdata=new getData();
    private  List<MovContable> listaMov=  getdata.getResumenCuentasMes(fechaForm,empresaForm,areaForm);
-            
+           
     
     
     public Archivos() throws IOException, FileNotFoundException, ClassNotFoundException {
@@ -638,11 +638,14 @@ public class Archivos extends javax.swing.JFrame {
  String fecha=df.format(utilDate);
         
         String realPath; 
+        String pathLog;
         if (path==null){
     String sys = System.getProperty("user.home");    
     realPath=sys+"\\"+nombreArchivo+"-"+fecha+".txt"; // Sustituye "/" por el directorio ej: "/upload"
+    pathLog=sys+"\\"+"LogProceso"+"-"+fecha+".txt";
         }else{
         realPath=path+"\\"+nombreArchivo+"-"+fecha+".txt";
+        pathLog=path+"\\"+"LogProceso"+"-"+fecha+".txt";
         }
   
         
@@ -652,14 +655,34 @@ public class Archivos extends javax.swing.JFrame {
  
  
         FileWriter fichero = null;
+        FileWriter ficheroLog=null;
         PrintWriter pw = null;
+        PrintWriter pwLog = null;
         try
         {
             fichero = new FileWriter(realPath,sobrescribe);
+            ficheroLog= new FileWriter(pathLog,true);
+          
             pw = new PrintWriter(fichero);
+            pwLog = new PrintWriter(ficheroLog);
+            
 
             
                for (MovContable termino: lista){
+                   
+                   //Tratamiento contable de registros con valor negativo, deben pasar al debe o haber segun corresponda
+                   if (termino.getDebe()<0){
+                       termino.setHaber(termino.getDebe()*-1);
+                       termino.setDebe(0);
+                       pwLog.println(nombreArchivo+",Debe,"+termino.getCodCuenta()+","+termino.getDebe()+","+termino.getHaber()+",\""+proceso +" DEL MES\",,,,,,,,,,,,"+termino.getCentroCosto()+",,,,,,"+termino.getUltimoDiaMes()+","+termino.getUltimoDiaMes()+",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,");
+                   }
+                   if (termino.getHaber()<0){
+                       termino.setDebe(termino.getHaber()*-1);
+                       termino.setHaber(0);
+                   pwLog.println(nombreArchivo+",Haber,"+termino.getCodCuenta()+","+termino.getDebe()+","+termino.getHaber()+",\""+proceso +" DEL MES\",,,,,,,,,,,,"+termino.getCentroCosto()+",,,,,,"+termino.getUltimoDiaMes()+","+termino.getUltimoDiaMes()+",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,");
+                   }
+                       
+                       
                    
              if(sobrescribe==false){
                        // Administrativos es la 2a entrada al archivo
@@ -694,6 +717,7 @@ public class Archivos extends javax.swing.JFrame {
            // asegurarnos que se cierra el fichero.
            if (null != fichero)
               fichero.close();
+              ficheroLog.close();
            } catch (Exception e2) {
               e2.printStackTrace();
            }
