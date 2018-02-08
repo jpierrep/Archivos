@@ -50,7 +50,7 @@ public class Archivos extends javax.swing.JFrame {
     DefaultTableModel tableModel;
     private JTextField filename = new JTextField(), dir = new JTextField();
    private int empresaForm=0;
-   private int añoForm=2017;
+   private int añoForm=getAñoActual();
    private String mesForm="01";
    private String areaForm="Todas";
    private String fechaForm= Integer.toString(añoForm)+mesForm+"01";
@@ -63,14 +63,16 @@ public class Archivos extends javax.swing.JFrame {
     public Archivos() throws IOException, FileNotFoundException, ClassNotFoundException {
         initComponents();
         postInitComponents();
-        
-        llenarTabla(listaMov,0, 2017,"01","Todas");
+        //Seteamos el año actual
+        Calendar now = Calendar.getInstance();   
+
+        llenarTabla(listaMov,0,añoForm,"01","Todas");
            int[] totales=this.getTotalesMov(listaMov);
             jLabel8.setText(Integer.toString(totales[0]));
              jLabel9.setText(Integer.toString(totales[1]));
         
         jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Enero", "Febrero", "Marzo", "Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"  }));
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "2017","2016","2015"  }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { añoForm+"",(añoForm-1)+"",(añoForm-2)+""  }));
         jComboBox3.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "GuardService Seguridad S.A.","GS Tecnologías S.A.","GS Outsourcing S.A.","Inversiones Odin Ltda."  }));
         
         getData data=new getData();
@@ -251,6 +253,14 @@ public class Archivos extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+ 
+    public int getAñoActual(){
+           //Seteamos el año actual
+        Calendar now = Calendar.getInstance();   
+        return now.get(Calendar.YEAR); 
+   
+    }
+    
     private void postInitComponents(){
         
         jComboBox1.addActionListener(new java.awt.event.ActionListener() {
